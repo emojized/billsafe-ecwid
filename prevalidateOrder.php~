@@ -1,0 +1,62 @@
+<?php
+  include '../includes/config.php';
+  include 'cls_prevalidate.php';
+  $objPreval    = new Prevalidate();
+  $customer_id  =  $_SESSION['CUSTOMER_ID'];
+  if(isset($_POST["btnsave"]))
+  {
+       $customer_id  =  $_SESSION['CUSTOMER_ID']; 
+       header("Location:getprevalidateOrders.php");     
+  }
+ ?>
+ <html>
+    <head>
+       <title>BillSAFE Test Application</title>
+       <link rel="stylesheet" type="text/css" href="../css/style.css">
+     </head>
+ <body>
+ <table>
+    <tbody>
+       <tr>
+            <td></td>
+            <td><h1 class="header"><img src="../resource/logo_pp.jpg"></img>Test Application</h1></td>
+       </tr>
+    </tbody>
+ </table>
+ <table>
+     <tbody>
+       <tr>
+            <td></td>
+            <td>Payment invoice details</td>
+       </tr>
+    </tbody>
+ </table>
+ <br>
+
+ <form action="#" method="POST">
+        <input type="submit" name="btnsave" value="next step"/>
+        <!--<input type="hidden" name="order_amount" value="" />
+        <input type="hidden" name="order_currencyCode" value="" />
+        <input type="hidden" name="customer_id" value=""/>
+        <input type="hidden" name="customer_company" value=""/>
+        <input type="hidden" name="customer_gender" value="" />
+        <input type="hidden" name="customer_firstname" value="" />
+        <input type="hidden" name="customer_lastname" value="" />
+        <input type="hidden" name="customer_street" value="" />
+        <input type="hidden" name="customer_houseNumber" value="" />
+        <input type="hidden" name="customer_postcode" value="" />
+        <input type="hidden" name="customer_city" value="" />
+        <input type="hidden" name="customer_country" value="" />
+        <input type="hidden" name="customer_dateOfBirth" value="" />
+        <input type="hidden" name="customer_email" value="" />
+        <input type="hidden" name="customer_phone" value="" />
+        <input type="hidden" name="deliveryAddress_company" value="" />
+        <input type="hidden" name="deliveryAddress_gender" value="" />
+        <input type="hidden" name="deliveryAddress_firstname" value="" />
+        <input type="hidden" name="deliveryAddress_lastname" value="" />
+        <input type="hidden" name="deliveryAddress_street" value="" />
+        <input type="hidden" name="deliveryAddress_houseNumber" value="" />
+        <input type="hidden" name="deliveryAddress_postcode" value="" />
+        <input type="hidden" name="deliveryAddress_city" value="" />
+        <input type="hidden" name="deliveryAddress_country" value="" />-->
+ </form>

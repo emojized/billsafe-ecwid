@@ -1,0 +1,89 @@
+<?php
+class  DhBillsafeAccess { / / contains access and call function:
+ 
+ public  function  call bill safe () {
+ 
+  $ Conn = curl_init ();
+  curl_setopt ( $ conn , CURLOPT_URL, " https://sandbox-nvp.billsafe.de/V208 " );
+  curl_setopt ( $ conn , CURLOPT_POST, 1);
+  curl_setopt ( $ conn , CURLOPT_POSTFIELDS, $ this -> PrepareRequest ());
+  curl_setopt ( $ conn , CURLOPT_RETURNTRANSFER, 1);
+  $ ResponseXML = curl_exec ( $ conn );
+  $ This -> _responseXml = $ responseXML ;
+  curl_close ( $ conn );
+  / / Echo "XML Response:" var_dump ($ responseXML). / / Uc4debug
+}}
+ 
+/ / # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+ 
+class  DhBillsafeRequest extends  DhBillsafeAccess {
+ 
+ public  function  PrepareRequest () {
+ 
+  / / Request put together:
+  $ Request = "method =" . $ this -> _requestId;
+  foreach ( $ this -> _paramsIn as  $ Pikey  => $ pISet ) {
+   $ Request . = "&" . $ pikey . "=" . $ pISet ;
+  }
+ 
+  / / Keys (access) to attach:
+  foreach ( $ this -> _keys as  $ kKey  => $ kset ) {
+   $ Request . = "&" . $ kKey . "=" . $ kset ;
+  }
+ 
+  / / Request clean compile:
+  $ RequestArr = explode ( "&" , $ request );
+  foreach ( $ requestArr  as  $ requestSet ) {
+   list ( $ param , $ value ) = explode ( "=" , $ requestSet );
+   $ Param = str_replace ( "% 7E" , "~" , rawurlencode ( $ param ));
+   $ Value = str_replace ( "% 7E" , "~" , rawurlencode (utf8_encode ( $ value )));
+   $ RequestCanonicalized [] = $ param . "=" . $ value ;
+  }
+  $ Request = implode ( "&" , $ requestCanonicalized );
+ 
+  . / / Echo "Request Edition:" $ request; / / Uc4debug
+  return  $ request ;
+ }
+ 
+ public  function  handleResponse () {
+ 
+  ResponseDomDoc $  = new  DomDocument (); / / Process the response in new DomDocument object
+  $ ResponseDomDoc -> loadXML ( $ this -> _responseXml);
+  $ Responses = $ responseDomDoc -> getElementsByTagName ( "response" );
+  foreach ( $ responses  as  $ response ) {
+ 
+   $ Ack = $ response -> getElementsByTagName ( "ack" ) -> item (0) -> nodeValue;
+ 
+   / / If error, Error Codes and Messages read:
+   if ( $ ack == "ERROR" ) {
+    $ Errors  = $ response -> getElementsByTagName ( "error list" );
+    foreach ( $ errors  as  $ i  => $ error ) {
+     $ ErrorDetails  = $ response -> getElementsByTagName ( "item" );
+     foreach ( $ error details  as  $ detail error ) {
+      $ ErrorCode = $ error details -> item ( $ i ) -> getElementsByTagName ( "code" ) -> item (0) -> nodeValue;
+      $ ErrorMsg = $ error details -> item ( $ i ) -> getElementsByTagName ( "message" ) -> item (0) -> nodeValue;
+      $ Output [ 'error' ] [] = $ error code . ":" . $ errorMsg ;
+      . /.. / Echo "Error:" $ errorCode ":" $ errorMsg; / / Uc4debug
+   }}}
+ 
+   / / Else: Read for nested returns in the second level:
+   / / (Return value is then zweidim.Array)
+   elseif ( $ response -> getElementsByTagName ( 'article list' ) -> item (0) -> nodeValue) {
+    $ Params = $ this -> _paramsOut;
+    $ Items  = $ response -> getElementsByTagName ( "item" );
+    foreach ( $ items  as  $ key  => $ item ) {
+     foreach ( $ params  as  $ param ) {
+      $ Output [ $ key ] [ $ param ] = $ items -> item ( $ key ) -> getElementsByTagName ( $ param ) -> item (0) -> nodeValue;
+   }}}
+ 
+   / / Normal case: requested parameters of response in array read:
+   else {
+    $ Params = $ this -> _paramsOut;
+    foreach ( $ params  as  $ param ) {
+     $ Output [ $ param ] = $ response -> getElementsByTagName ( $ param ) -> item (0) -> nodeValue;
+     . / / Echo "Output:" $ param "=" $ output [$ param];.. / / Uc4debug
+   }}
+ 
+   return  $ output ;
+}}}
+?>
